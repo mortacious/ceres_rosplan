@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="waypoint_file" default="$(find ceres_rosplan_domain)/common/waypoints.yml"/>
+
+    <param name="/rosplan/domain_path" value="$(find ceres_rosplan_domain)/common/domain_ceres.pddl"/>
+
+	<!-- knowledge base -->
+	<node name="rosplan_knowledge_base" pkg="rosplan_knowledge_base" type="knowledgeBase" respawn="false" output="screen">
+	</node>
+
+	<!-- scene database (MongoDB) -->
+	<node name="rosplan_scene_database" pkg="mongodb_store" type="mongodb_server.py" respawn="false" output="log">
+	    <param name="database_path" value="$(find rosplan_knowledge_base)/common/mongoDB/" />
+	</node>
+	<node name="rosplan_scene_message_store" pkg="mongodb_store" type="message_store_node.py" respawn="false" output="log">
+	</node>
+	
+	<!-- planning system -->
+	<node name="rosplan_planning_system" pkg="rosplan_planning_system" type="planner" respawn="false" output="screen">
+		<!-- directory for generated files -->
+		<param name="data_path" value="$(find rosplan_planning_system)/common/" />
+		<param name="problem_path" value="$(find rosplan_planning_system)/common/problem.pddl" />
+		<param name="strl_file_path" value="$(find rosplan_planning_system)/common/plan.strl" />
+
+		<!-- to run the planner -->
+		<param name="planner_command" value="timeout 10 $(find rosplan_planning_system)/common/bin/popf -n DOMAIN PROBLEM" />
+		<param name="generate_default_problem" value="true" />
+		<param name="max_dispatch_attempts" value="2" />
+    </node>
+
+
+    <!-- action interfaces -->
+    <node name="rosplan_interface_movebaseflex" pkg="rosplan_interface_movebaseflex" type="rpmovebaseflex" respawn="false" output="screen">
+        <param name="pddl_action_name" value="goto_waypoint"/>
+    </node>
+
+    <node name="interactive_waypoint_server" pkg="interactive_waypoint_server" type="interactive_waypoint_server.py" respawn="false" output="screen">
+        <param name="waypoint_file" value="$(arg waypoint_file)"/>
+    </node>
+
+
+    <!-- init the ceres robot instance in the planning system -->
+    <node name="init_ceres_rosplan" pkg="ceres_rosplan_launch" type="init_ceres_rosplan.py" respawn="false" output="screen"/>
+</launch>
