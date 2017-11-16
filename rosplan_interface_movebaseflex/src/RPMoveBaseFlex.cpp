@@ -1,7 +1,7 @@
 #include "rosplan_interface_movebaseflex/RPMoveBaseFlex.h"
 #include <move_base_flex_msgs/GetPathResult.h>
 #include <move_base_flex_msgs/GetPathGoal.h>
-#include <interactive_waypoint_server/RemoveConnection.h>
+#include <interactive_waypoint_server_msgs/RemoveConnection.h>
 /* The implementation of RPMoveBase.h */
 using namespace KCL_rosplan;
 
@@ -12,7 +12,7 @@ RPMoveBaseFlex::RPMoveBaseFlex(ros::NodeHandle &nh, std::string &actionserver)
   exe_path_action_client(actionserver + "/exe_path", true),
   recovery_action_client(actionserver + "/recovery", true)
 {
-    remove_connection_service = nh.serviceClient<interactive_waypoint_server::RemoveConnection>("/interactive_waypoint_server/removeConnection");
+    remove_connection_service = nh.serviceClient<interactive_waypoint_server_msgs::RemoveConnection>("/interactive_waypoint_server/removeConnection");
 }
 
 /* action dispatch callback */
