@@ -24,6 +24,9 @@
         <rosparam file="$(find ceres_navigation)/config/local_costmap_params.yaml" command="load" />
       </node>
 
+      <!-- visualisation -->
+      <node name="rviz" pkg="rviz" type="rviz" args="-d $(find ceres_rosplan_launch)/rviz/rviz_config.rviz">
+      </node>
 
 
  </launch>

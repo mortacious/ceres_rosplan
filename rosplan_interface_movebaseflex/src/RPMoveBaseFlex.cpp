@@ -124,7 +124,7 @@ bool RPMoveBaseFlex::concreteCallback(const rosplan_dispatch_msgs::ActionDispatc
 
     exe_path_action_client.sendGoal(exePathGoal);
 
-    finished_before_timeout = exe_path_action_client.waitForResult();
+    finished_before_timeout = exe_path_action_client.waitForResult(ros::Duration(60));
     if(finished_before_timeout) {
         auto result = exe_path_action_client.getResult();
 
