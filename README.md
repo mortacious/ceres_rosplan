@@ -23,7 +23,7 @@ As the waypoints a fully interactive, all changes in rviz will be updated immedi
   &nbsp;&nbsp;&nbsp;&nbsp; The waypoint connections as LINE markers in rviz
 - `interactive_waypoint_server/update` (visualization\_msgs/InteractiveMarkerUpdate)
  
- &nbsp;&nbsp;&nbsp;&nbsp; The waypoints as interactive markers
+  &nbsp;&nbsp;&nbsp;&nbsp; The waypoints as interactive markers
  
 ### Services 
 
