@@ -39,6 +39,14 @@ class InteractiveWaypointServer(object):
         self.knowledge_service = rospy.ServiceProxy("/kcl_rosplan/update_knowledge_base_array", KnowledgeUpdateServiceArray)
         self.message_store = message_store.MessageStoreProxy()
 
+        # clear the database 
+        entries = self.message_store.query(PoseStamped._type, single=False)
+        for entry in entries:
+            id = entry[1]["_id"]
+            
+            self.message_store.delete(str(id))
+        
+
     def insertMarkerCallback(self, pos):
         rospy.logdebug("(Interactive_Waypoint_Server) Inserting new waypoint at position ({0},{1},{2}).".format(pos.point.x, pos.point.y, pos.point.z))
         self.insertMarker(pos.point)
@@ -345,7 +353,8 @@ class InteractiveWaypointServer(object):
             pstamped = PoseStamped()
             pstamped.header.frame_id = frame_id
             pstamped.pose = self.server.get(int_marker.name).pose
-            #pstamped.pose.orientation.w = 1.0 # otherwise movebase will reject the quaternion
+            pstamped.pose.orientation.w = 1.0 # otherwise movebase will reject the quaternion
+
             id = self.message_store.insert_named(int_marker.name, pstamped)
             # insert into graph
             self.waypoint_graph.add_node(int_marker.name, {"id": id})
